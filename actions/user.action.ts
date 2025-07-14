@@ -24,7 +24,6 @@ export const userJoinQueue = async (barberId: string) => {
                 userId: userId,
             }
         })
-        console.log(queue)
         if (!queue) {
             return { status: 404, message: "Failed to join queue" };
         }
@@ -53,9 +52,6 @@ const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
 
 
 export const getNearByShops = async (lat: number, long: number, km = 5) => {
-    console.log("Fetching nearby shops for coordinates:", lat, long, "within", km, "km");
-
-    // lat = 20.7746033 long = 86.4603367
     try {
         const allShops = await prisma.barber.findMany({
             where: {

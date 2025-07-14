@@ -37,7 +37,6 @@ export const authOptions: AuthOptions = {
       token.role = user.role;  
     }
     if (trigger === "update" && session?.role) {
-      console.log('triggering')
       token.role = session.role;
     }
       return token;

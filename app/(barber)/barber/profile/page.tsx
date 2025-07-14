@@ -1,4 +1,3 @@
-
 'use client'
 import { getBarber } from '@/actions/barber.action'
 import { useQuery } from '@tanstack/react-query'
@@ -16,8 +15,7 @@ const BarberProfilePage = () => {
             const response = await getBarber();
             return response
         },
-    })
-    console.log("Barber Data:", data);
+    }) 
     if (isLoading) {
         return <div className='h-screen w-full '>
             <Loading boxes={1} child=" w-[70%] max-md:w-[90%] mt-30 max-md:h-[460px] h-[490px]  " parent="h-screen" />
@@ -41,7 +39,7 @@ const BarberProfilePage = () => {
                     <p>Location : {data?.location}</p>
                     <p>Google Map Link : {data?.location}</p>
                     <p>Phone Number : {data?.phoneNumber}</p>
-                    <button onClick={() => signOut()} className=" buttonred rounded-full text-white px-5 py-2.5 max-md:py-2">Logout</button>
+                    <button onClick={() => signOut()} className=" bg-gradient-to-br from-red-400 to-red-600 rounded-full text-white px-5 py-2.5 max-md:py-2">Logout</button>
                 </div>
             }
         </div>

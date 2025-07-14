@@ -34,7 +34,7 @@ export const updateBarber = async (data: FormData, lat: number, long: number) =>
         }
         return { status: 200, message: "Profile updated successfully" };
     } catch (error) {
-        console.log("Error in updateBarber:", error);
+        // console.log("Error in updateBarber:", error);
         return { status: 500, message: "Internal Server Error" };
     }
 }
@@ -67,7 +67,7 @@ export const getBarber = async () => {
 
         return JSON.parse(JSON.stringify(barber));
     } catch (error) {
-        console.log("Error in getBarber:", error);
+        // console.log("Error in getBarber:", error);
         return { status: 500, message: "Internal Server Error" };
     }
 }
@@ -86,23 +86,27 @@ export const getBarberQueue = async (p: number) => {
             select: { id: true },
         });
 
+        if (!barberId) {
+            return { status: 404, message: "Barber not found", data: [] };
+        }
+
         const [barber, count] = await prisma.$transaction([
             prisma.queue.findMany({
-                where: { barberId: barberId?.id },
-                  take: limit,
-                    skip: limit * (p - 1),
-                    select: {
-                        barberId: true,
-                        id: true,
-                        enteredAt: true,
-                        userId: true,
-                        user: {
-                            select: {
-                                name: true,
-                                phoneNumber: true,
-                            }
+            where: { barberId: barberId?.id },
+                take: limit,
+                skip: limit * (p - 1),
+                select: {
+                    barberId: true,
+                    id: true,
+                    enteredAt: true,
+                    userId: true,
+                    user: {
+                        select: {
+                            name: true,
+                            phoneNumber: true,
                         }
                     }
+                }
             }),
             prisma.queue.count({
                 where: { barberId: barberId?.id },
@@ -114,7 +118,7 @@ export const getBarberQueue = async (p: number) => {
 
         return JSON.parse(JSON.stringify({ data: barber ,count }));
     } catch (error) {
-        console.log("Error in getBarberQueue:", error);
+        // console.log("Error in getBarberQueue:", error);
         return { status: 500, message: "Internal Server Error", data: [] };
     }
 }
@@ -135,7 +139,7 @@ export const deleteQueueItem = async (id: string) => {
         }
         return { status: 200, message: "Queue item deleted successfully" };
     } catch (error) {
-        console.log("Error in deleteQueueItem:", error);
+        // console.log("Error in deleteQueueItem:", error);
         return { status: 500, message: "Internal Server Error" };
     }
 }
@@ -170,7 +174,7 @@ export const completeQueueItem = async (queueId: string, userId: string, barberI
         }
         return { status: 200, message: "Queue item updated successfully" };
     } catch (error) {
-        console.log("Error in updateQueueItem:", error);
+        // console.log("Error in updateQueueItem:", error);
         return { status: 500, message: "Internal Server Error" };
     }
 }
@@ -213,14 +217,14 @@ export const getBarberTrack = async (p: number) => {
                 where: { barberId: barberId?.id },
             })
         ])
-        console.log(barber, count);
+        // console.log(barber, count);
         if (!barber) {
             return { status: 404, message: "Barber not found", data: [] };
         }
 
         return JSON.parse(JSON.stringify({ data: barber[0].trackService, count }));
     } catch (error) {
-        console.log("Error in getBarberTrack:", error);
+        // console.log("Error in getBarberTrack:", error);
         return { status: 500, message: "Internal Server Error", data: [] };
     }
 }
@@ -245,9 +249,13 @@ export const getBarberTransactions = async (startDate:Date, endDate:Date) => {
                 select: {
                     trackService: { 
                         select: {
-                            id: true,
                             completedAt:true,
                             amount: true,
+                            user:{
+                                select: {
+                                    name: true,
+                                }
+                            }
                         },
                         
                     }
@@ -259,7 +267,7 @@ export const getBarberTransactions = async (startDate:Date, endDate:Date) => {
 
         return JSON.parse(JSON.stringify({ data: barber[0].trackService }));
     } catch (error) {
-        console.log("Error in getBarberTrack:", error);
+        // console.log("Error in getBarberTrack:", error);
         return { status: 500, message: "Internal Server Error", data: [] };
     }
 }

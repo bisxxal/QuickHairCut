@@ -18,16 +18,16 @@ export const serviceOptions = [
 //     '#4740b3'
 // ];
 export const COLORS2 = [
-    '#880e4f', // Raspberry
-    '#4740b3', // Dark cyan-blue
+  '#00695c', // Dark teal
+  '#4740b3', // Dark cyan-blue
+  '#8e24aa', // Dark purple
+  '#880e4f', // Raspberry
     '#ad1457', // Dark pink
     '#5d5fef', // Dark blue
     '#6a1b9a', // Deep violet
-    '#8e24aa', // Dark purple
   '#4527a0', // Dark indigo
   '#283593', // Dark blue
   '#1565c0', // Vibrant navy blue
-  '#00695c', // Dark teal
   '#2e7d32', // Dark green
   '#558b2f', // Olive green
   '#9e9d24', // Olive yellow

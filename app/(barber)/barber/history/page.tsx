@@ -16,8 +16,7 @@ const History = () => {
       const response = await getBarberTrack(page)
       return response
     },
-  })
-  console.log(data?.count)
+  }) 
   const totalPages = Math.ceil(data?.count / limit);
   return (
     <div className=' w-full pb-10'>

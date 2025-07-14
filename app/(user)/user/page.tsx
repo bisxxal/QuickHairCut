@@ -32,7 +32,6 @@ const UserMainPage = () => {
           localStorage.setItem('long', position.coords.longitude.toString());
           localStorage.setItem('userTime', new Date().toISOString());
           toast.success("Location fetched successfully.");
-          console.log('Current Position:', position);
         },
         (error) => {
           switch (error.code) {
@@ -63,12 +62,6 @@ const UserMainPage = () => {
 
   return (
     <div className=' w-full min-h-full px-10 max-md:px-3'>
-      
-      {
-        lat && long && (
-          <p className='text-red-500  text-bold text-center '>Current Location: Latitude {lat}, Longitude {long}</p>
-        )
-      }
       <div className={` ${lat ? "  bg-green-400/30" : " card"} my-3 py-5 border rounded-3xl border-dashed `}>
         {!lat && !long && <button className='w-fit disabled:opacity-10 flex mx-auto buttonbg p-4 ' type="button" onClick={requestLocation}>
           Get Current Location

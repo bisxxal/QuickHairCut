@@ -40,6 +40,7 @@ model Barber {
   user        User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   trackService TrackService[]
 
+  @@index([userId])
   @@map("barbers")
 }
 
@@ -48,16 +49,16 @@ model Queue {
   barberId  String
   userId    String
   enteredAt DateTime? @default(now())
-  status    String    @default("pending") // pending, completed, cancelled
+  // status    String    @default("pending")  
   barber    Barber    @relation(fields: [barberId], references: [id], onDelete: Cascade)
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Indexes for fast filtering and sorting
   @@index([barberId])
   @@index([userId])
-  @@index([status])
+  // @@index([status])
   @@index([enteredAt])
-  @@index([barberId, status])
+  // @@index([barberId, status])
   @@index([barberId, enteredAt])
   @@map("queues")
 }
@@ -77,20 +78,7 @@ model TrackService {
   @@index([userId])
   @@map("trackService")
 }
-enum ServiceTypes {
-  haircut
-  shave
-  beardTrim
-  hairColoring
-  hairStyling
-  hairTreatment
-  facial
-  waxing
-  threading
-  manicure
-  pedicure
-  massage
-}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String  @map("user_id")
@@ -128,4 +116,18 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verificationtokens")
+}
+enum ServiceTypes {
+  haircut
+  shave
+  beardTrim
+  hairColoring
+  hairStyling
+  hairTreatment
+  facial
+  waxing
+  threading
+  manicure
+  pedicure
+  massage
 }

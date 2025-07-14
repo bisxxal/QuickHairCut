@@ -9,8 +9,9 @@ import React, { useEffect, useState } from 'react'
 import { endOfMonth, startOfMonth } from 'date-fns';
 import DateButton from '@/components/dateButtons'
 import { COLORS2 } from '@/lib/util'
-const TrackPage = () => {
-  const today = new Date();
+
+const CustomerAnalyticsPage = () => {
+    const today = new Date();
   const [startDate, setStartDate] = useState<Date>(startOfMonth(today));
   const [endDate, setEndDate] = useState<Date>(endOfMonth(today));
   const [typedata, setTypeData] = useState([])
@@ -21,39 +22,26 @@ const TrackPage = () => {
       return response
     },
   })
-  useEffect(() => {
-    if (!data?.data) return;
-    const groupedMap = new Map<string, { amount: number, timestamp: number }>();
 
-    data.data.forEach((curr: { amount: number, completedAt: string }) => {
-      if (curr.amount === null || !curr.completedAt) return;
-      const normalizedDate = moment(curr.completedAt).format('YYYY-MM-DD');
-      const timestamp = new Date(normalizedDate).getTime();
+  useEffect(()=>{
+    const users = data?.data.reduce((acc,curr)=>{
+        const existing = acc.find(user => user.name === curr.user.name);
+        if (existing) {
+            existing.amount += curr.amount;
+            existing.count += 1;
+            // return acc;
+        }
+        else{
+            acc.push({name:curr.user.name , amount:curr.amount , count:1})
+        }
+        return acc
+    },[])
 
-      if (groupedMap.has(normalizedDate)) {
-        const existing = groupedMap.get(normalizedDate)!;
-        existing.amount += curr.amount;
-      } else {
-        groupedMap.set(normalizedDate, {
-          amount: curr.amount,
-          timestamp,
-        });
-      }
-    });
-
-    const sorted = Array.from(groupedMap.entries())
-      .map(([dateKey, value]) => ({
-        amount: value.amount,
-        date: moment(dateKey).format('Do MMMM YYYY'),
-        timestamp: value.timestamp,
-      }))
-      .sort((a, b) => a.timestamp - b.timestamp);
-
-    setTypeData(sorted);
-  }, [data]);
- 
+    setTypeData(users || []);
+  },[data])
   return (
-    <div className=' w-full min-h-screen pb-20'>
+    <div>
+       <div className=' w-full min-h-screen pb-20'>
       <Back className='' />
       <h1 className=' text-center text-xl  font-semibold '>Date vs Income</h1>
       <DateButton startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} />
@@ -67,7 +55,7 @@ const TrackPage = () => {
             <Pie
               data={typedata}
               dataKey="amount"
-              nameKey="date"
+              nameKey="name"
               cx="50%"
               cy="50%"
               outerRadius={150}
@@ -93,13 +81,23 @@ const TrackPage = () => {
               }} />
           </PieChart>
 
+            <div>
+                {
+                    typedata.map((item, index) => (
+                        <div key={index} className='flex items-center gap-2'>
+                            <div className='w-3 h-3 rounded-full' style={{ backgroundColor: COLORS2[index % COLORS2.length] }}></div>
+                            <span className='text-sm'>{item.name} ₹{item.amount} Total visit:{item.count}</span>
+                        </div>
+                    ))
+                }
+            </div>
         </div>
 
         <div className=' w-[95%] mx-auto mt-9 h-[400px] border bordercolor rounded-3xl mb-4 card p-2 px-4'>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart width={730} height={250} data={typedata}>
               <CartesianGrid strokeDasharray="2 2" />
-              <XAxis className=' text-xs' dataKey="date" />
+              <XAxis className=' text-xs' dataKey="name" />
               <YAxis />
               <Tooltip
 
@@ -121,7 +119,8 @@ const TrackPage = () => {
       </>
         : !isLoading && <p className='center text-xl font-semibold'>No History Found</p>}
     </div>
+    </div>
   )
 }
 
-export default TrackPage
+export default CustomerAnalyticsPage

@@ -77,14 +77,14 @@ const SwipeRevealActions: React.FC<Props> = ({
        
         <button
           onClick={handleUpdate}
-          className={` bg-gradient-to-l  from-blue-600 to-blue-500 buttonnone cursor-pointer text-white px-4 flex items-center w-[90px] h-full py-2 -pr-5 ${border} `}
+          className={` bg-gradient-to-l  from-blue-600 to-blue-500 cursor-pointer text-white px-4 flex items-center w-[90px] h-full py-2 -pr-5 ${border} `}
         >
        <UserCheck />
         </button>
 
          <button
           onClick={handleDelete}
-          className={` bg-gradient-to-r from-red-400 to-red-600 buttonnone cursor-pointer text-white px-4 flex items-center justify-end  py-2 w-[90px] h-full ${border}  `}
+          className={` bg-gradient-to-r from-red-400 to-red-600 cursor-pointer text-white px-4 flex items-center justify-end  py-2 w-[90px] h-full ${border}  `}
         >
           <Trash  />
         </button>

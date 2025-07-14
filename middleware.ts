@@ -7,10 +7,7 @@ export default withAuth(
     // Allow access for authenticated users
      const pathname = req?.nextUrl?.pathname
     const token = req?.nextauth?.token
-    const role = token?.role
-
-    // console.log("Path:", pathname)
-    // console.log("Role:", role)
+    const role = token?.role 
 
     // Protect /admin and /barber routes
     // if (pathname.startsWith("/admin") && role !== "ADMIN") {

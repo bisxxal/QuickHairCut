@@ -86,7 +86,6 @@ const BarberQueuePage = () => {
   };
 
   const handleUpdate = (queueId: string, userId: string, barberId: string) => {
-    console.log(`Queue ID: ${queueId}, User ID: ${userId} , Barber ID: ${barberId}`);
     setShowEdit({ queueId: queueId, userId: userId, barberId: barberId });
     setOpenItemId(null);
   };
