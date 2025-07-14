@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          String?   @default("USER")
+  phoneNumber   String?   @unique
+  barber        Barber?
+  inQueue       Boolean?  @default(false)
+  queue         Queue[]
+  accounts      Account[]
+  sessions      Session[]
+  trackService   TrackService[]
+
+  @@index([role])
+  @@index([inQueue])
+}
+
+model Barber {
+  id          String  @id @default(cuid())
+  name        String?
+  shopName    String?
+  lat         Float?
+  long        Float?
+  location    String?
+  gmapLink    String?
+  phoneNumber String? @unique
+  Queue       Queue[]
+  userId      String? @unique
+  user        User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trackService TrackService[]
+
+  @@map("barbers")
+}
+
+model Queue {
+  id        String    @id @default(cuid())
+  barberId  String
+  userId    String
+  enteredAt DateTime? @default(now())
+  status    String    @default("pending") // pending, completed, cancelled
+  barber    Barber    @relation(fields: [barberId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Indexes for fast filtering and sorting
+  @@index([barberId])
+  @@index([userId])
+  @@index([status])
+  @@index([enteredAt])
+  @@index([barberId, status])
+  @@index([barberId, enteredAt])
+  @@map("queues")
+}
+model TrackService {
+  id        String    @id @default(cuid())
+  barberId  String
+  userId    String
+  service   ServiceTypes[]
+  amount    Int?
+
+  completedAt DateTime @default(now())
+  barber    Barber    @relation(fields: [barberId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // queue     Queue     @relation(fields: [queueId], references: [id], onDelete: Cascade)
+
+  @@index([barberId])
+  @@index([userId])
+  @@map("trackService")
+}
+enum ServiceTypes {
+  haircut
+  shave
+  beardTrim
+  hairColoring
+  hairStyling
+  hairTreatment
+  facial
+  waxing
+  threading
+  manicure
+  pedicure
+  massage
+}
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
