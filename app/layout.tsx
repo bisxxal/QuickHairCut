@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 import QuaryClient from "@/provider/QuaryClient";
 import { Poppins } from "next/font/google";
 import Navbar from "@/components/navbar";
-
+import "react-datepicker/dist/react-datepicker.css";
 const inter = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"] });
 
 export const metadata: Metadata = {

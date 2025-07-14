@@ -224,3 +224,42 @@ export const getBarberTrack = async (p: number) => {
         return { status: 500, message: "Internal Server Error", data: [] };
     }
 }
+export const getBarberTransactions = async (startDate:Date, endDate:Date) => {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session || !session.user) {
+            return { status: 401, message: "Unauthorized", data: [] };
+        }
+        const userId = session.user.id;
+        const barber = await prisma.barber.findMany({
+                where: { userId ,
+                    trackService: {
+                        some: {
+                            completedAt: {
+                                gte: startDate,
+                                lte: endDate
+                            }
+                        }
+                    }
+                 },
+                select: {
+                    trackService: { 
+                        select: {
+                            id: true,
+                            completedAt:true,
+                            amount: true,
+                        },
+                        
+                    }
+                },
+            }) 
+        if (!barber) {
+            return { status: 404, message: "Barber not found", data: [] };
+        }
+
+        return JSON.parse(JSON.stringify({ data: barber[0].trackService }));
+    } catch (error) {
+        console.log("Error in getBarberTrack:", error);
+        return { status: 500, message: "Internal Server Error", data: [] };
+    }
+}

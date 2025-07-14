@@ -27,7 +27,8 @@ body {
   background-color:#89dceb;
 }
 .card{
-   @apply  bg-gradient-to-tl  from-[#B8B2E1] font-medium to-[#e4dfff];
+  @apply  bg-gradient-to-tl  from-[#B8B2E1] font-medium to-[#e4dfff];
+  box-shadow: inset -1px -1px 17px 0px #7676761c, 0 8px 10px -6px rgb(0 0 0 / 0.1) ;
   /* background-color: #e4dfff; */
 }
 @keyframes pulseShimmer {
@@ -110,4 +111,40 @@ button:hover , a:hover{
     transform: translate3d(0, 0, 0);
     scale: 1;
   }
+}
+
+
+
+
+.customclass {
+  background-color: #0000000a !important;
+  backdrop-filter: blur(50px) !important;
+  border-color: #4e56f3a8 !important;
+  border-radius: 20px !important;
+  overflow: hidden !important ;
+  /* box-shadow: inset -12px -3px 20px 2px #00000021, 0 8px 10px -6px rgb(0 0 0 / 0.1) !important ; */
+}
+ 
+.react-datepicker__day--in-selecting-range, .react-datepicker__day--in-range{
+  background-color: #ffffff00 !important;
+  color: #ffffff !important;
+}
+.react-datepicker__day--in-selecting-range:hover, .react-datepicker__day--in-range:hover{
+  background-color: #6a71f3 !important;
+  color: #ffffff !important;
+}
+
+.react-datepicker__header {
+  background-color: #ffffff6f !important;
+  backdrop-filter: blur(20px) !important;
+  color: #4e56f3 !important;
+  border-color: #6a71f3 !important;
+  box-shadow: inset -12px -3px 20px 2px #00000021, 0 8px 10px -6px rgb(0 0 0 / 0.1) !important ;
+}
+.react-datepicker__current-month{ 
+  color: #6a71f3 !important;
+}
+
+.react-datepicker__day-name{
+  color: #6a71f3 !important;
 }

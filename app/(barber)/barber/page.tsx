@@ -4,13 +4,15 @@ import BarberQueuePage from './queue/page'
 
 const BarberMainPage = () => {
   return (
-    <div className=' center gap-3 flex-col'>
-      <div className='mt-10 center gap-3'>
-        <Link className=' my-4 buttonbg' href="/barber/profile">Go to Profile</Link>
-      <Link className=' my-4 buttonbg' href="/barber/queue">View Queue</Link>
-      <Link className=' my-4 buttonbg' href="/barber/track">Service History</Link>
+    <div className='pb-10 center gap-3 flex-col'>
+      <h2 className=' mt-10 text-lg font-medium'>Quick Links</h2>
+      <div className=' center flex-wrap gap-3'>
+        <Link className='flex w-[200px] center buttonbg' href="/barber/profile">Go to Profile</Link>
+        <Link className='flex w-[200px] center buttonbg' href="/barber/queue">View Queue</Link>
+        <Link className='flex w-[200px] center buttonbg' href="/barber/history">Service History</Link>
+        <Link className='flex w-[200px] center buttonbg' href="/barber/track">Track Transactions</Link>
       </div>
-     <BarberQueuePage/>
+      <BarberQueuePage />
     </div>
   )
 }

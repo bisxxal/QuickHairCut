@@ -66,7 +66,8 @@ import moment from 'moment'
             toast.error("All fields are required and must be valid.");
             return;
         }
-        if( !/^\d+$/.test(phoneNumber) || phoneNumber.length < 10) {
+
+        if( !/^\d+$/.test(phoneNumber) || !/^[6-9]\d{9}$/.test(phoneNumber) || phoneNumber.length < 10) {
             toast.error("Phone number must be a valid number with at least 10 digits.");
             return;
         }

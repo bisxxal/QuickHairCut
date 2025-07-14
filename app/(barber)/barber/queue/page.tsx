@@ -1,6 +1,5 @@
 'use client'
 import { completeQueueItem, deleteQueueItem, getBarberQueue } from '@/actions/barber.action'
-import Back from '@/components/ui/back'
 import Loading from '@/components/ui/loading'
 import Pagination from '@/components/ui/pagination'
 import SwipeRevealActions from '@/components/ui/swipeToDelete'
@@ -104,7 +103,7 @@ const BarberQueuePage = () => {
   }
   const totalPages = Math.ceil(data?.count / limit);
   return (
-    <div className='relative w-full'>
+    <div className='relative w-full pb-10'>
       <h1 className=' text-center text-xl font-semibold my-5'>Mange Queue {data?.count}</h1>
       {showEdit.userId && <div className='popupOpen fixed h-full w-full top-0 left-0 backdrop-blur-[20px]  bg-[#00000046] p-4 z-100'>
         <button onClick={() => setShowEdit({ userId: '', queueId: '', barberId: '' })} className=' px-4 py-2 '>
@@ -130,7 +129,7 @@ const BarberQueuePage = () => {
           <button disabled={CompleteQueueMutation.isPending} type="submit" className="center mt-4 buttonbg">{CompleteQueueMutation.isPending ? <Loader className='animate-spin' /> : 'Submit'}</button>
         </form>
       </div>}
-      
+
       <div className='min-h-[40vh] mx-auto w-[70%] max-md:w-[95%]'>
         {
           isLoading ? (
@@ -163,7 +162,7 @@ const BarberQueuePage = () => {
         }
       </div>
 
-      <Pagination page={page} totalPages={totalPages} setPage={setPage} />
+      {totalPages && <Pagination page={page} totalPages={totalPages} setPage={setPage} />}
     </div>
   )
 }
