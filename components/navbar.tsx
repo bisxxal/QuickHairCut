@@ -20,7 +20,7 @@ const Navbar = () => {
           height={40}
           className='rounded-full'
         />
-       <button onClick={() => signOut()} className=" buttonred rounded-full text-white px-5 py-2">Logout</button>
+       {/* <button onClick={() => signOut()} className=" buttonred rounded-full text-white px-5 py-2">Logout</button> */}
       </div>
      }
     </div>

@@ -1,17 +1,19 @@
 
 'use client'
-import { getBarber, updateBarber } from '@/actions/barber.action'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import React, {  useEffect, useState } from 'react'
-import toast, { LoaderIcon } from 'react-hot-toast'
+import { updateBarber } from '@/actions/barber.action'
+import { useMutation,  useQueryClient } from '@tanstack/react-query'
+import React, { useState } from 'react'
+import toast from 'react-hot-toast'
 import { Loader, MapPinCheck } from 'lucide-react';
 import { BarberProfileProps } from '@/lib/constant'
+import moment from 'moment'
 
  const BarberProfileEditPage = ({data}:{data:BarberProfileProps}) => {
     const [lat, setLat] = useState<number|null>(data?.lat || null)
     const [long, setLong] = useState<number|null>(data?.long || null)
     const [error, setError] = useState<string | null>(null)
     const [isLoading, setLoading] = useState(false)
+    const client = useQueryClient();
 
     const requestLocation = () => {
         setLoading(true);
@@ -22,6 +24,7 @@ import { BarberProfileProps } from '@/lib/constant'
                     setLong(position.coords.longitude);
                     toast.success("Location fetched successfully.");
                     console.log('Current Position:', position);
+                    localStorage.setItem('BarberTime', new Date().toISOString());
                 },
                 (error) => {
                     switch (error.code) {
@@ -53,8 +56,18 @@ import { BarberProfileProps } from '@/lib/constant'
     const handleSubmit = async (formdata: FormData) => {
         const name = formdata.get('name') as string;
         const shopName = formdata.get('shopName') as string;
-        if (!name || !shopName || lat === null || long === null ) {
+        const phoneNumber = formdata.get('phoneNumber') as string;
+
+        if (!lat && !long) { 
+            toast.error("Please fetch your current location first.");
+            return;
+        } 
+        if (!name || !shopName ) {
             toast.error("All fields are required and must be valid.");
+            return;
+        }
+        if( !/^\d+$/.test(phoneNumber) || phoneNumber.length < 10) {
+            toast.error("Phone number must be a valid number with at least 10 digits.");
             return;
         }
         updateProfile.mutate(formdata);
@@ -65,21 +78,23 @@ import { BarberProfileProps } from '@/lib/constant'
             return await updateBarber(formdata, lat, long);
         },
         onSuccess: (data) => {
-            if (data.status !== 200) {
+            if (data.status === 200) {
                 toast.success('Profile updated successfully');
+                client.invalidateQueries({ queryKey: ['barberprofile'] });
                 return;
             }
             else {
-                toast.success(data.message);
+                toast.error(data.message);
+                return;
             }
         }
     })
     return (
-        <div className=' w-full'>
+        <div className=' w-full pb-10'>
         {lat && long && (
             <p className='text-red-500  text-bold text-center '>Current Location: Latitude {lat}, Longitude {long}</p>)
         }
-            <form className=' w-[70%] mt-10 max-md:w-[90%] mx-auto flex flex-col ' action={handleSubmit}>
+            <form className=' w-[70%] mt-10 max-md:text-[14px] text-base max-md:w-[90%] mx-auto flex flex-col ' action={handleSubmit}>
                 <div className=' flex flex-col gap-2'>
                     <label htmlFor="name">Name</label>
                     <input defaultValue={data?.name} type="text" name="name" id="name" required />
@@ -92,13 +107,18 @@ import { BarberProfileProps } from '@/lib/constant'
                     <label htmlFor="phoneNumber">Phone Number</label>
                     <input defaultValue={data?.phoneNumber} type="number" name="phoneNumber" id="shopName" required />
                 </div>
-                <div className={` ${lat ? "  bg-green-400/30":" card"} my-3 py-5 border rounded-3xl border-dashed `}>
-                   { !lat && !long && <button className='w-fit disabled:opacity-10 flex mx-auto buttonbg p-4 ' type="button" disabled={isLoading} onClick={requestLocation}>
-                        {isLoading ? <LoaderIcon /> : 'Get Current Location'}
-                    </button>}
-                    {error && <p className='text-red-500 text-sm  text-bold text-center '>{error}</p>}
-                    {lat && long && <p className='text-center text-green-600 center gap-3'>Location fetched successfully.<MapPinCheck/> </p>}
-                </div>
+                  <div className={` ${lat ? "  bg-green-400/30" : " card"} my-3 py-5 border rounded-3xl border-dashed `}>
+                        {!lat && !long && <button className='w-fit disabled:opacity-10 flex mx-auto buttonbg p-4 ' type="button" onClick={requestLocation}>
+                          Get Current Location
+                        </button>}
+                        {error && <p className='text-red-500 text-sm  text-bold text-center '>{error}</p>}
+                        {lat && long && <div className='text-center text-green-600 flex-col center gap-3'>
+                         <p className='center gap-1'> Location fetched successfully.<MapPinCheck /> </p>
+                         <p className='center text-sm gap-1'> Last updated on {moment(localStorage.getItem('BarberTime')).format('MMMM Do YYYY, h:mm a')} </p>
+                          <button className='buttonbg' onClick={() =>requestLocation() }>Update Location</button>
+                        </div>
+                        }
+                      </div>
                 <div className='flex flex-col gap-2'>
                     <label htmlFor="location">Landmark / Location</label>
                     <input defaultValue={data?.location} type="text" name="location" id="location" required />
