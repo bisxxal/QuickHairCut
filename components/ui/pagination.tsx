@@ -26,7 +26,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, setPage, page }) =>
   };
   return (
     <div className='rounded-xl w-[590px] text-base max-md:text-sm max-md:w-[300px] px-5  left-[30%] max-md:bottom-5 max-md:left-[15%] fixed bottom-10 right-0 bg-[#0e218e29] backdrop-blur-xl max-md:p-1  p-3 z-50'>
-      {totalPages > 1 && (
+      {totalPages > 0 && (
         <div className='flex justify-center flex-wrap items-center gap-2 '>
           <button
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}

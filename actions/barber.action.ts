@@ -181,7 +181,7 @@ export const completeQueueItem = async (queueId: string, userId: string, barberI
 
 export const getBarberTrack = async (p: number) => {
     try {
-        const limit = 3;
+        const limit = 10;
         const session = await getServerSession(authOptions);
         if (!session || !session.user) {
             return { status: 401, message: "Unauthorized", data: [] };

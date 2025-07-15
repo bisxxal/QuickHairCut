@@ -161,7 +161,7 @@ const BarberQueuePage = () => {
         }
       </div>
 
-      {totalPages && <Pagination page={page} totalPages={totalPages} setPage={setPage} />}
+      {data?.count && <Pagination page={page} totalPages={totalPages} setPage={setPage} />}
     </div>
   )
 }

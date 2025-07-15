@@ -1,3 +1,4 @@
+import Navbar from "@/components/navbar";
 import { authOptions } from "@/lib/auth";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
@@ -19,6 +20,7 @@ export default async function BarberLayout({
   // }
   return (
     <main>
+      <Navbar panel="barber" />
       {children}
     </main>
   );

@@ -22,7 +22,7 @@ const BarberProfilePage = () => {
         </div>
     }
     return (
-        <div className=' w-full pb-10'>
+        <div className=' w-full pb-10  '>
             <Back className='' />
             <div className='flex  border  w-fit mx-auto rounded-full justify-center'>
                 <button className={`px-5 py-2 rounded-full ${showEditPage === 'profile' ? " buttonbg " : " "}`} onClick={() => setShowEditPage('profile')}>Profile</button>

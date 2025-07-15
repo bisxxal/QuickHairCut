@@ -29,7 +29,7 @@ export const userJoinQueue = async (barberId: string) => {
         }
         return { status: 200, message: "Joined queue successfully!" };
     } catch (error) {
-        console.error("Error joining queue:", error);
+        // console.error("Error joining queue:", error);
         return { status: 500, message: "Failed to join queue" };
     }
 } 
@@ -99,7 +99,7 @@ export const getNearByShops = async (lat: number, long: number, km = 5) => {
         return nearbyShops;
 
     } catch (error) {
-        console.error("Error fetching nearby shops:", error);
+        // console.error("Error fetching nearby shops:", error);
         throw new Error("Failed to fetch nearby shops");
     }
 };

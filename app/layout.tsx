@@ -23,7 +23,7 @@ export default function RootLayout({
         <QuaryClient>
           <Toaster />
           <div className=" relative w-full min-h-screen ">
-            <Navbar/>
+            {/* <Navbar/> */}
             {children}
           </div>
         </QuaryClient>

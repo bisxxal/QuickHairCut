@@ -1,3 +1,4 @@
+import Navbar from "@/components/navbar";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
@@ -15,6 +16,7 @@ export default async function UserLayout({
   //   }
   return (
     <main>
+      <Navbar panel="user" />
       {children}
     </main>
   );

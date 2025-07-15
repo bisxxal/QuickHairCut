@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 
 const History = () => {
     const [page, setPage] = useState(1);
-  const limit = 3;
+  const limit = 10;
   const { data, isLoading } = useQuery({
     queryKey: ['barberTrack', page],
     queryFn: async () => {
@@ -36,7 +36,7 @@ const History = () => {
         )) : <p className='center text-xl font-semibold'>No History Found</p>}
 
       </div>
-     { totalPages && <Pagination page={page} totalPages={totalPages} setPage={setPage} />}
+     { data?.count && <Pagination page={page} totalPages={totalPages} setPage={setPage} />}
     </div>
   )
 }
