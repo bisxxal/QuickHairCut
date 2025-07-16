@@ -7,29 +7,61 @@ import Pagination from '@/components/ui/pagination'
 import SwipeRevealActions from '@/components/ui/swipeToDelete'
 import { useSocket } from '@/hook/useSocket'
 import { serviceOptions } from '@/lib/util'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { Loader, X } from 'lucide-react'
 import moment from 'moment'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 
+interface BabrberQueueProps {
+  barberId: string;
+  userId: string;
+  id: string;
+  enteredAt: Date,
+  user: {
+    name: string;
+    phoneNumber: string;
+  }
+}
 const BarberQueuePage = () => {
-
   const { data: session } = useSession()
   const userId = session?.user.id as string
-  const { socket, onlineUser } = useSocket(userId)
-
+  const { socket, ready, onlineUser } = useSocket(userId)
+  const [data, setData] = useState<{ data: BabrberQueueProps[]; count: number }>({ data: [], count: 0 });
   const [page, setPage] = useState(1);
+  const [isLoading, setLoading] = useState(false)
   const limit = 3;
-  const quary = useQueryClient()
-  const { data, isLoading } = useQuery({
-    queryKey: ['barberQueue', page],
-    queryFn: async () => {
-      const response = await getBarberQueue(page)
-      return response
-    },
-  })
+
+  useEffect(() => {
+    const getNearByShopsByApi = async (page: number) => {
+      setLoading(true)
+      try {
+        const response = await getBarberQueue(page);
+        setData(response);
+      } catch (error) {
+      }
+      setLoading(false)
+    }
+    getNearByShopsByApi(page);
+  }, [page]);
+
+
+  useEffect(() => {
+    if (!ready || !socket) return;
+    const onQueueUpdate = (msg: { barberId: string; userId: string; queueId: string; queue: any }) => {
+      setData(prev => ({
+        data: [...prev.data, msg.queue],
+        count: prev.count + 1
+      }));
+    };
+    socket.on("queueUpdate", onQueueUpdate);
+    return () => {
+      socket.off("queueUpdate", onQueueUpdate);
+    };
+  }, [socket, ready]);
+
+
   const [showEdit, setShowEdit] = useState({ queueId: '', userId: '', barberId: '' });
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -69,9 +101,16 @@ const BarberQueuePage = () => {
       else {
         if (data.queueItem) {
           socket?.emit('message_deleted', { queueId: data?.queueItem?.id, barberId: data.queueItem.barberId, userId: data.queueItem.userId });
+          setData(prev => {
+            const updatedData = prev.data.filter(item => item.id !== data?.queueItem?.id);
+            return {
+              ...prev,
+              data: updatedData,
+              count: Math.max(prev.count - 1, 0)
+            };
+          });
         }
         toast.success(data.message);
-        quary.invalidateQueries({ queryKey: ['barberQueue'] })
       }
     }
   })
@@ -88,10 +127,18 @@ const BarberQueuePage = () => {
       else {
         if (data.queueItem) {
           socket?.emit('message_deleted', { queueId: data?.queueItem?.id, barberId: data.queueItem.barberId, userId: data.queueItem.userId });
+          setData(prev => {
+            const updatedData = prev.data.filter(item => item.id !== data?.queueItem?.id);
+            return {
+              ...prev,
+              data: updatedData,
+              count: Math.max(prev.count - 1, 0)
+            };
+          });
         }
         toast.success(data.message);
         setShowEdit({ queueId: '', userId: '', barberId: '' });
-        quary.invalidateQueries({ queryKey: ['barberQueue'] })
+
       }
     }
   })
@@ -126,11 +173,13 @@ const BarberQueuePage = () => {
   const currDigits = String(onlineUser.length).split('');
   const prevDigits = String(prevCount).padStart(currDigits.length, '0').split('');
 
+
   return (
     <div className='relative w-full px-4 pb-10'>
-      <div className=' flex items-center justify-between   max-md:items-start max-md:gap-2'>
+
+      <div className=' flex items-center justify-end w-1/2 ml-auto max-md:w-full  max-md:items-start max-md:gap-2'>
         <h1 className=' text-center text-xl font-semibold my-5'>Mange Queue <span className=' textbase'>
-          {data?.count && <CountUp from={0} to={data?.count} separator="," direction="up" duration={1} className="count-up-text" />}</span></h1>
+          {data?.count && <CountUp from={0} to={data?.count} separator="," direction="up" duration={1} className="count-up-text text-xl " />}</span></h1>
         <h2 className=" bg-gradient-to-b from-green-300/20 to-green-300 p-2 ml-auto my-4 font-medium rounded-4xl px-3 cursor-default border w-fit border-green-500 text-green-600 flex gap-1">
           <span className='delay-300 animate-ping mr-1'>🟢</span> Online
           {currDigits.map((digit, idx) => (
@@ -166,8 +215,8 @@ const BarberQueuePage = () => {
         {
           isLoading ? (
             <Loading boxes={5} child='w-full h-[135px] max-md:h-[130px] !rounded-xl !flex-row' parent='mx-auto w-[70%] max-md:w-full ' />
-          ) : data && data.data.length > 0 ? (
-            data.data.map((item: any) => (
+          ) : data && data?.data?.length > 0 ? (
+            data?.data?.map((item: any) => (
               <SwipeRevealActions
                 key={item.id}
                 id={item.id}

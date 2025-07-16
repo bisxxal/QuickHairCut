@@ -3,14 +3,6 @@
 import { authOptions } from "@/lib/auth"
 import prisma from "@/lib/prisma"
 import { getServerSession } from "next-auth"
-
-export const getUser = async () => {
-    try {
-
-
-    } catch (error) {
-    }
-}
 export const userJoinQueue = async (barberId: string) => {
     try {
         const session = await getServerSession(authOptions);
@@ -22,7 +14,8 @@ export const userJoinQueue = async (barberId: string) => {
             data: {
                 barberId,
                 userId: userId,
-            }
+            },
+            
         })
         if (!queue) {
             return { status: 404, message: "Failed to join queue" };
@@ -36,7 +29,7 @@ export const userJoinQueue = async (barberId: string) => {
 
 const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
     const toRad = (value: number) => (value * Math.PI) / 180;
-    const R = 6371; // Earth radius in km
+    const R = 6371; 
     lat1 === null ? lat1 = 20.7746033 : lat1;
     lon1 === null ? lon1 = 86.4603367 : lon1;
     const dLat = toRad(lat2 - lat1);
@@ -54,6 +47,9 @@ const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
 
 export const getNearByShops = async (lat: number, long: number, km = 5) => {
     try {
+        // if (!lat || !long) {
+        //     return [];
+        // }
         const allShops = await prisma.barber.findMany({
             where: {
                 AND: [
@@ -99,8 +95,8 @@ export const getNearByShops = async (lat: number, long: number, km = 5) => {
 
         return nearbyShops;
 
-    } catch (error) {
-        // console.error("Error fetching nearby shops:", error);
-        throw new Error("Failed to fetch nearby shops");
+    } catch (error) {   
+
+        return [];
     }
 };

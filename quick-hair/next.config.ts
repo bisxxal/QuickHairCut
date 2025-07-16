@@ -15,12 +15,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // skipMiddlewareUrlNormalize: true,
-  // experimental: {
-  //   serverActions: {
-  //     allowedOrigins: ['x9q10w2c-3000.inc1.devtunnels.ms', 'localhost:3000', 'localhost:3001'],
-  //   },
-  // },
+  skipMiddlewareUrlNormalize: true,
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['x9q10w2c-3000.inc1.devtunnels.ms', 'localhost:3000', 'localhost:3001','quickhaircut.vercel.app'],
+    },
+  },
 };
 
 export default nextConfig;

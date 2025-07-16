@@ -74,7 +74,6 @@ export const getBarber = async () => {
 
 export const getBarberQueue = async (p: number) => {
     try {
-
         const limit = 3; // Default limit
         const session = await getServerSession(authOptions);
         if (!session || !session.user) {

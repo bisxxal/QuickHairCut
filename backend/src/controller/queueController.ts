@@ -65,13 +65,24 @@ export const userJoinQueue = async (req: Request, res: Response) => {
             data: {
                 barberId,
                 userId: userId,
+            },
+            select:{
+                id: true,
+                barberId: true,
+                userId: true,
+                enteredAt: true,
+                user:{
+                    select:{
+                        name: true,
+                    }
+                }
             }
         })
         if (!queue) {
             return res.status(400).json({ status: 404, message: "Failed to join queue" });
         }
         const io = getIO();
-        io.emit('queueUpdate', { barberId, userId , queueId: queue.id });
+        io.emit('queueUpdate', { barberId, userId , queueId: queue.id , queue });
         return res.status(200).json({ status: 200, message: "Joined queue successfully!" });
     } catch (error) {
         return res.status(400).json({ status: 500, message: "Failed to join queue" });

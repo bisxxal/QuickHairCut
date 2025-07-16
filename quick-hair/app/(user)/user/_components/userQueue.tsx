@@ -9,33 +9,30 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import AnimatedDigit from '@/components/ui/animatedDigit'
 import CountUp from '@/components/ui/countup'
+import { getNearByShops } from '@/actions/user.action'
 
 const UserQueue = ({ lat, long }: { lat: number, long: number }) => {
+    console.log("lat, long", lat, long);
     const { data: session } = useSession()
     const userId = session?.user.id as string
     const [data, setData] = useState<any[]>([])
     const [isLoading, setLoading] = useState(false)
     const { ready, socket, onlineUser } = useSocket(userId)
     const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+    const [loadingBarberId, setLoadingBarberId] = useState<string | null>(null);
+
     useEffect(() => {
         const getNearByShopsByApi = async (lat: number, long: number) => {
             setLoading(true)
             try {
-                const response = await axios.get(`${BACKEND_URL}/api/queue?lat=20.7672161&long=86.4514638&userId=${userId}`, { params: { lat, long } })
-                if (!response.data) {
-                    throw new Error('No data found');
-                }
-                const data = response.data;
-                setData(data);
+                const response = await getNearByShops(lat, long);
+                setData(response);
             } catch (error) {
             }
             setLoading(false)
         }
         getNearByShopsByApi(lat, long)
-    }, [lat, long, userId]);
-
-
-    const [loadingBarberId, setLoadingBarberId] = useState<string | null>(null);
+    }, [lat, long]);
 
     const joinQueue = async (barberId: string) => {
         if (!barberId || !userId) {
@@ -60,51 +57,51 @@ const UserQueue = ({ lat, long }: { lat: number, long: number }) => {
         }
     };
 
-    useEffect(() => {
-        if (!ready || !socket) return;
+useEffect(() => {
+    if (!ready || !socket) return;
 
-        const onQueueUpdate = (msg: { barberId: string, userId: string, queueId: string }) => {
-            setData((prevData) => {
-                return prevData.map((shop) => {
-                    if (shop.id === msg.barberId) {
-                        //   const alreadyInQueue = shop.Queue.some((q) => q.userId === msg.userId);
-                        //   if (alreadyInQueue) return shop;
-                        return {
-                            ...shop,
-                            Queue: [
-                                ...shop.Queue,
-                                {
-                                    id: msg.queueId,
-                                    userId: msg.userId,
-                                },
-                            ],
-                        };
-                    }
-                    return shop;
-                });
+    const onQueueUpdate = (msg: { barberId: string, userId: string, queueId: string }) => {
+        setData((prevData) => {
+            return prevData.map((shop) => {
+                if (shop.id === msg.barberId) {
+                    //   const alreadyInQueue = shop.Queue.some((q) => q.userId === msg.userId);
+                    //   if (alreadyInQueue) return shop;
+                    return {
+                        ...shop,
+                        Queue: [
+                            ...shop.Queue,
+                            {
+                                id: msg.queueId,
+                                userId: msg.userId,
+                            },
+                        ],
+                    };
+                }
+                return shop;
             });
-        }
-        const onMessageDeleted = (data: { barberId: string, userId: string, queueId: string }) => {
-            setData((prevData) => {
-                return prevData.map((shop) => {
-                    if (shop.id === data.barberId) {
-                        return {
-                            ...shop,
-                            Queue: shop.Queue.filter((q: { userId: string, id: string }) => q.userId !== data.userId || q.id !== data.queueId),
-                        };
-                    }
-                    return shop;
-                });
+        });
+    }
+    const onMessageDeleted = (data: { barberId: string, userId: string, queueId: string }) => {
+        setData((prevData) => {
+            return prevData.map((shop) => {
+                if (shop.id === data.barberId) {
+                    return {
+                        ...shop,
+                        Queue: shop.Queue.filter((q: { userId: string, id: string }) => q.userId !== data.userId || q.id !== data.queueId),
+                    };
+                }
+                return shop;
             });
-        };
-        socket.on("queueUpdate", onQueueUpdate);
-        socket.on('message_deleted', onMessageDeleted);
+        });
+    };
+    socket.on("queueUpdate", onQueueUpdate);
+    socket.on('message_deleted', onMessageDeleted);
 
-        return () => {
-            socket.off("queueUpdate", onQueueUpdate)
-            socket.off('message_deleted', onMessageDeleted)
-        };
-    }, [socket, ready]);
+    return () => {
+        socket.off("queueUpdate", onQueueUpdate)
+        socket.off('message_deleted', onMessageDeleted)
+    };
+}, [socket, ready]);
 
     const [prevCount, setPrevCount] = useState(onlineUser.length);
 
@@ -117,9 +114,8 @@ const UserQueue = ({ lat, long }: { lat: number, long: number }) => {
 
     return (
         <>
-            <div className=' flex items-center justify-between max-md:flex-col max-md:items-start max-md:gap-2'>
-
-                <h1 className='pt-10 text-xl max-md:text-base font-medium'>{!lat && !long ? 'Get you Location to find the nearest shop' : 'Showing nearby Shops'}</h1>
+            <div className='  flex items-center justify-between  '>
+                <h1 className=' text-xl max-md:text-sm font-medium'>{!lat && !long ? 'Get you Location to find the nearest shop' : 'Showing nearby Shops'}</h1>
                 <h2 className=" bg-gradient-to-b from-green-300/20 to-green-300 p-2 ml-auto my-4 max-md:my-2 font-medium rounded-4xl px-3 cursor-default border w-fit border-green-600 text-green-600 flex gap-1">
                     <span className=' animate-ping mr-1 duration-500 delay-300'>🟢</span> Online
                     {currDigits.map((digit, idx) => (

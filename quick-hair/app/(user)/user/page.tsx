@@ -1,10 +1,9 @@
 'use client'
-import React, { use, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import UserQueue from './_components/userQueue'
 import { MapPinCheck } from 'lucide-react'
 import moment from 'moment'
-import { useSocket } from '@/hook/useSocket'
 
 const UserMainPage = () => {
   const [error, setError] = useState<string | null>(null)
@@ -60,28 +59,22 @@ const UserMainPage = () => {
     }
   };
 
-const {socket} = useSocket();
-useEffect(() => {
-    if (socket) {
-      socket.emit('count', 'Hello from the client!');
-    }
-  }, [socket]);
-  
   return (
     <div className=' w-full min-h-full px-10 max-md:px-3'>
-      <div className={` ${lat ? "  bg-green-400/30" : " card"} my-3 py-5 border rounded-3xl border-dashed `}>
-        {!lat && !long && <button className='w-fit disabled:opacity-10 flex mx-auto buttonbg p-4 ' type="button" onClick={requestLocation}>
-          Get Current Location
+      {lat && <p>lat : {lat} , long : {long}</p>}
+      <div className={` ${lat ? "bg-gradient-to-br from-green-300/20 to-green-500/70  border-green-600" : " card"} my-3 py-5 border rounded-3xl border-dashed `}>
+        {!lat && !long && <button className='w-fit max-md:text-xs  disabled:opacity-10 flex mx-auto buttonbg p-4 ' type="button" onClick={requestLocation}>
+          Get Current Location to find nearby haircut
         </button>}
         {error && <p className='text-red-500 text-sm  text-bold text-center '>{error}</p>}
-        {lat && long && <div className='text-center text-green-600 flex-col center gap-3'>
+        {lat && long && <div className='text-center  text-green-600 flex-col center gap-3'>
           <p className='center gap-1'> Location fetched successfully.<MapPinCheck /> </p>
           <p className='center text-sm gap-1'> Last updated on {moment(localStorage.getItem('userTime')).format('MMMM Do YYYY, h:mm a')} </p>
           <button className='buttonbg' onClick={() => requestLocation()}>Update Location</button>
         </div>
         }
       </div>
-      {lat && long && <UserQueue lat={lat} long={long} />}
+      {/* {lat && long && <UserQueue lat={lat} long={long} />} */}
       {<UserQueue lat={lat} long={long} />}
     </div>
   )

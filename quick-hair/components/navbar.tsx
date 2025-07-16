@@ -6,20 +6,20 @@ import React from 'react'
 
 const Navbar = ({panel}:{panel:'user'|'barber'}) => {
   const { data, status } = useSession();
+  const role = data?.user.role?.toLowerCase()
   return (
     <div className=' flex justify-between shadow  h-[60px] items-center p-5 max-md:p-3   '>
-      {data ? <Link href={`/${data?.user.role?.toLowerCase()}`} className='text-2xl center gap-2 max-md:text-lg whitespace-nowrap textbase font-bold'>
+      {  <Link href={`/${role?`${role}`:'/'}`} className='text-2xl center gap-2 max-md:text-lg whitespace-nowrap textbase font-bold'>
        <div className="w-9 h-9 max-md:w-8 max-md:h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
             <Scissors className="w-6 h-6 text-white" />
           </div>
-      Quick Hair</Link> :
-        <Link href={`/`} className='text-2xl textbase font-bold'>Quick Hair</Link>}
+      Quick Hair</Link>  }
       {
         status !== 'loading' && data ? <div className='center gap-2 max-md:gap-1'>
-          <div className=' text-base max-md:text-xs'>Wellcome , 👋🏻 {data.user.name}</div>
+          <div className='max-md:w-[80px] max-md:h-full text-base max-md:text-[10px]'>Welcome , 👋🏻 {data.user.name}</div>
           <img src={data.user.image!} alt="User Avatar" width={40} height={40} className=' max-md:w-8  rounded-full' />
-          {panel === 'user' &&   <button onClick={() => signOut()} className=" bg-gradient-to-br from-red-400 to-red-600 rounded-full text-white px-5 py-2 max-md:px-3 max-md:text-sm max-md:py-1.5">Logout</button>}
-          {panel === 'barber' && <div className='relative group '>
+          {role === 'user' &&   <button onClick={() => signOut()} className=" bg-gradient-to-br from-red-200/50 to-red-500/80 text-red-600 rounded-full border border-red-500  px-5 py-2 max-md:px-3 max-md:text-sm max-md:py-1.5">Logout</button>}
+          {role === 'barber' && <div className='relative group '>
             <label className=' cursor-pointer' htmlFor='is'>
               <CircleEllipsis className='' size={22} />
             </label>

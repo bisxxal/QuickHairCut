@@ -1,4 +1,3 @@
-
 'use client'
 import { updateBarber } from '@/actions/barber.action'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -14,40 +13,40 @@ const BarberProfileEditPage = ({ data }: { data: BarberProfileProps }) => {
     const [error, setError] = useState<string | null>(null)
     const client = useQueryClient();
 
-const requestLocation = () => {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                setLat(position.coords.latitude);
-                setLong(position.coords.longitude);
-                toast.success("Location fetched successfully.");
-                localStorage.setItem('BarberTime', new Date().toISOString());
-            },
-            (error) => {
-                switch (error.code) {
-                    case 1:
-                        toast.error("Location access denied by the user.");
-                        setError("Location access denied by the user.");
-                        break;
-                    case 2:
-                        toast.error("Location unavailable. Please check your device settings.");
-                        setError("Location unavailable. Please check your device settings. Or come out of the building.");
-                        break;
-                    case 3:
-                        toast.error("Location request timed out.");
-                        setError("Location request timed out. Please try again.");
-                        break;
-                    default:
-                        toast.error("An unknown error occurred while fetching location.");
-                        setError("An unknown error occurred while fetching location.");
-                        break;
+    const requestLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setLat(position.coords.latitude);
+                    setLong(position.coords.longitude);
+                    toast.success("Location fetched successfully.");
+                    localStorage.setItem('BarberTime', new Date().toISOString());
+                },
+                (error) => {
+                    switch (error.code) {
+                        case 1:
+                            toast.error("Location access denied by the user.");
+                            setError("Location access denied by the user.");
+                            break;
+                        case 2:
+                            toast.error("Location unavailable. Please check your device settings.");
+                            setError("Location unavailable. Please check your device settings. Or come out of the building.");
+                            break;
+                        case 3:
+                            toast.error("Location request timed out.");
+                            setError("Location request timed out. Please try again.");
+                            break;
+                        default:
+                            toast.error("An unknown error occurred while fetching location.");
+                            setError("An unknown error occurred while fetching location.");
+                            break;
+                    }
                 }
-            }
-        );
-    } else {
-        toast.error("Geolocation is not supported by this browser.");
-    } 
-};
+            );
+        } else {
+            toast.error("Geolocation is not supported by this browser.");
+        }
+    };
 
     const handleSubmit = async (formdata: FormData) => {
         const name = formdata.get('name') as string;
@@ -101,7 +100,7 @@ const requestLocation = () => {
                     <label htmlFor="phoneNumber">Phone Number</label>
                     <input defaultValue={data?.phoneNumber} type="number" name="phoneNumber" id="shopName" required />
                 </div>
-                <div className={` ${lat ? "  bg-green-400/30" : " card"} my-3 py-5 border rounded-3xl border-dashed `}>
+                <div className={` ${lat ? " bg-gradient-to-br from-green-300/20 to-green-500/70  border-green-600 " : " card"} my-3 py-5 border rounded-3xl border-dashed `}>
                     {!lat && !long && <button className='w-fit disabled:opacity-10 flex mx-auto buttonbg p-4 ' type="button" onClick={requestLocation}>
                         Get Current Location
                     </button>}
