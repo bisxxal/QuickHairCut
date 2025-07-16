@@ -18,8 +18,8 @@ const Navbar = ({panel}:{panel:'user'|'barber'}) => {
         status !== 'loading' && data ? <div className='center gap-2 max-md:gap-1'>
           <div className='max-md:w-[80px] max-md:h-full text-base max-md:text-[10px]'>Welcome , 👋🏻 {data.user.name}</div>
           <img src={data.user.image!} alt="User Avatar" width={40} height={40} className=' max-md:w-8  rounded-full' />
-          {role === 'user' &&   <button onClick={() => signOut()} className=" bg-gradient-to-br from-red-200/50 to-red-500/80 text-red-600 rounded-full border border-red-500  px-5 py-2 max-md:px-3 max-md:text-sm max-md:py-1.5">Logout</button>}
-          {role === 'barber' && <div className='relative group '>
+          {panel === 'user' &&   <button onClick={() => signOut()} className=" bg-gradient-to-br from-red-200/50 to-red-500/80 text-red-600 rounded-full border border-red-500  px-5 py-2 max-md:px-3 max-md:text-sm max-md:py-1.5">Logout</button>}
+          {panel === 'barber' && <div className='relative group '>
             <label className=' cursor-pointer' htmlFor='is'>
               <CircleEllipsis className='' size={22} />
             </label>
@@ -30,7 +30,7 @@ const Navbar = ({panel}:{panel:'user'|'barber'}) => {
               <Link className='text-sm hover:bg-[#5d5fef] bg-[#0f28845f] py-2 rounded-xl hover:text-[#e6e2eb] text-[#ffffff] center' href={`/barber/profile`}>Profile</Link>
               <Link className='text-sm hover:bg-[#5d5fef] bg-[#0f28845f] py-2 rounded-xl hover:text-[#e6e2eb] text-[#ffffff] px-[40px] center' href={`/barber/track`}> Transcation </Link>
               <Link className='text-sm hover:bg-[#5d5fef] bg-[#0f28845f] py-2 rounded-xl hover:text-[#e6e2eb] text-[#ffffff] center' href={`/barber/history`}> History </Link>
-              <Link className='text-sm hover:bg-[#5d5fef] bg-[#0f28845f] py-2 rounded-xl hover:text-[#e6e2eb] text-[#ffffff] whitespace-nowrap center text-center px-2 ' href={`/canalytics`}>Customer Analytics</Link>
+              <Link className='text-sm hover:bg-[#5d5fef] bg-[#0f28845f] py-2 rounded-xl hover:text-[#e6e2eb] text-[#ffffff] whitespace-nowrap center text-center px-2 ' href={`/barber/canalytics`}>Customer Analytics</Link>
             </div>
           </div>}
         </div> :

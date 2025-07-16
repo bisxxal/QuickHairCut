@@ -11,6 +11,7 @@ const BarberMainPage = () => {
         <Link className='flex w-[200px] max-md:w-[160px] center buttonbg' href="/barber/queue">View Queue</Link>
         <Link className='flex w-[200px] max-md:w-[160px] center buttonbg' href="/barber/history">Service History</Link>
         <Link className='flex w-[200px] max-md:w-[160px] whitespace-nowrap center buttonbg' href="/barber/track">Track Transactions</Link>
+        <Link className='flex w-[200px] max-md:w-[90%] whitespace-nowrap center buttonbg' href="/barber/canalytics">Customer Transactions</Link>
       </div>
       <BarberQueuePage />
     </div>

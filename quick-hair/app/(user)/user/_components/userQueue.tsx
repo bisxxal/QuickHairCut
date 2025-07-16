@@ -12,7 +12,6 @@ import CountUp from '@/components/ui/countup'
 import { getNearByShops } from '@/actions/user.action'
 
 const UserQueue = ({ lat, long }: { lat: number, long: number }) => {
-    console.log("lat, long", lat, long);
     const { data: session } = useSession()
     const userId = session?.user.id as string
     const [data, setData] = useState<any[]>([])

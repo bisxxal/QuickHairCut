@@ -49,3 +49,42 @@ export const COLORS2 = [
   '#33691e', // Moss green
   '#ff6f00'  // Burnt amber
 ];
+
+export function formatDateForIndia(dateString:Date) {
+  const date = new Date(dateString);
+
+  // Convert to IST
+  const istDate = new Date(date.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+
+  const now = new Date();
+  const istNow = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+
+  // Strip time to compare date only
+  const isSameDate = (d1, d2) =>
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate();
+
+  // Yesterday = today - 1
+  const yesterday = new Date(istNow);
+  yesterday.setDate(istNow.getDate() - 1);
+
+  const time = istDate.toLocaleTimeString("en-IN", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
+
+  if (isSameDate(istDate, istNow)) {
+    return `Today, ${time}`;
+  } else if (isSameDate(istDate, yesterday)) {
+    return `Yesterday, ${time}`;
+  } else {
+    const fullDate = istDate.toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+    return `${fullDate}, ${time}`;
+  }
+}

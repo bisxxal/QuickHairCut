@@ -1,12 +1,12 @@
 'use client'
-import { completeQueueItem, deleteQueueItem, getBarberQueue } from '@/actions/barber.action'
+import { completeQueueItem, deleteQueueItem, getBarber, getBarberQueue } from '@/actions/barber.action'
 import AnimatedDigit from '@/components/ui/animatedDigit'
 import CountUp from '@/components/ui/countup'
 import Loading from '@/components/ui/loading'
 import Pagination from '@/components/ui/pagination'
 import SwipeRevealActions from '@/components/ui/swipeToDelete'
 import { useSocket } from '@/hook/useSocket'
-import { serviceOptions } from '@/lib/util'
+import { formatDateForIndia, serviceOptions } from '@/lib/util'
 import { useMutation } from '@tanstack/react-query'
 import { Loader, X } from 'lucide-react'
 import moment from 'moment'
@@ -33,6 +33,29 @@ const BarberQueuePage = () => {
   const [isLoading, setLoading] = useState(false)
   const limit = 3;
 
+  const [barberId, setBarberId] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      const val = localStorage.getItem('bid');
+      return val ? (val) : null;
+    }
+    return null;
+  });
+  
+  useEffect(() => {
+    const fetchBarberId = async () => {
+      if (!barberId) {
+        const response = await getBarber()
+        if (response) {
+          setBarberId(response.id);
+          localStorage.setItem('bid', response.id);
+        }
+      }
+    }
+    if(!barberId) {
+      fetchBarberId();
+    }
+  }, [barberId]);
+
   useEffect(() => {
     const getNearByShopsByApi = async (page: number) => {
       setLoading(true)
@@ -50,6 +73,7 @@ const BarberQueuePage = () => {
   useEffect(() => {
     if (!ready || !socket) return;
     const onQueueUpdate = (msg: { barberId: string; userId: string; queueId: string; queue: any }) => {
+      if( msg.barberId !== barberId) return;
       setData(prev => ({
         data: [...prev.data, msg.queue],
         count: prev.count + 1
@@ -173,7 +197,6 @@ const BarberQueuePage = () => {
   const currDigits = String(onlineUser.length).split('');
   const prevDigits = String(prevCount).padStart(currDigits.length, '0').split('');
 
-
   return (
     <div className='relative w-full px-4 pb-10'>
 
@@ -233,7 +256,7 @@ const BarberQueuePage = () => {
                   <p><strong>Customer Name:</strong> {item?.user.name}</p>
                   <p><strong>Customer Id:</strong> {item?.userId}</p>
                   <p><strong>Phone No:</strong> {item?.user.phoneNumber}</p>
-                  <p className=' mt-2'><strong>Date / Time:</strong> {moment(item.enterdAt).format('MMMM Do YYYY, h:mm a')}</p>
+                  <p className=' mt-2'><strong>Date / Time:</strong> {formatDateForIndia(item.enteredAt)}</p>
                 </div >
               </SwipeRevealActions>
             ))

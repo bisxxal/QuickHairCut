@@ -11,7 +11,7 @@ export const updateBarber = async (data: FormData, lat: number, long: number) =>
         if (!session || !session.user) {
             return { status: 401, message: "Unauthorized" };
         }
-        const userId = session.user.id;
+        const userId = session?.user?.id;
         const name = data.get('name') as string;
         const shopName = data.get('shopName') as string;
         const location = data.get('location') as string;
@@ -23,10 +23,13 @@ export const updateBarber = async (data: FormData, lat: number, long: number) =>
         }
 
         const barber = await prisma.barber.update({
-            where: { userId: userId ? userId : 'cmcz12nqo0003t0tslhvxigdm' },
+            where: { userId: userId },
             data: {
                 name, shopName, lat, long, location, gmapLink, phoneNumber
-            }
+            },
+            // update:{
+            //     name, shopName, lat, long, location, gmapLink, phoneNumber
+            // }
         })
 
         if (!barber) {
@@ -49,7 +52,6 @@ export const getBarber = async () => {
 
         const barber = await prisma.barber.findUnique({
             where: { userId },
-
             include: {
                 user: {
                     select: {

@@ -1,8 +1,5 @@
 'use server';
-
 import prisma from "@/lib/prisma";
-
-
 export const createBarber = async (data: FormData) => {
     try {
         const email = data.get('email') as string;
@@ -12,8 +9,11 @@ export const createBarber = async (data: FormData) => {
         }
         const user = await prisma.user.update({
             where: { email: email },
-            data: { role: 'BARBER' }
+            data: { role }
         });
+        if(role !== 'BARBER') {
+            return {status:200 , message:"Role updated successfully"};
+        }
         const barber = await prisma.barber.create({
             data:{
                 userId:user.id,      
@@ -29,11 +29,4 @@ export const createBarber = async (data: FormData) => {
          return {status:500 , message:"Internal Server Error"};
     }
 }
-
-export const getUser = async ()=>{
-    try {
-
-        
-    } catch (error) {
-    }
-}
+ 

@@ -3,6 +3,7 @@ import { getBarberTrack } from '@/actions/barber.action'
 import Back from '@/components/ui/back'
 import Loading from '@/components/ui/loading'
 import Pagination from '@/components/ui/pagination'
+import { formatDateForIndia } from '@/lib/util'
 import { useQuery } from '@tanstack/react-query'
 import moment from 'moment'
 import React, { useState } from 'react'
@@ -29,7 +30,7 @@ const History = () => {
             <h2 className='text-lg font-semibold'>{item.name}</h2>
             <p>Customer Name : {item.user.name}</p>
             {item.amount && <p className=' text-2xl font-semibold '>₹{item.amount}</p>}
-            <p>Date : {moment(item.completedAt).format(' Do MMMM ( h:mm a)  YYYY')}</p>
+            <p>Date : {formatDateForIndia(item.completedAt)}</p>
             {item?.service && item?.service.length !== 0 &&
               <div className=' flex flex-wrap gap-1 mt-2'>services: {item?.service?.map((i: string) => <span key={i} className=' !text-xs border border-[#33335b7e] text-white  bg-[#6e56cfcc] py-0.5  rounded-lg p-2'>{i} {"  "}</span>)}</div>}
           </div>
