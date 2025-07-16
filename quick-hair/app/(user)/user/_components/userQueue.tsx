@@ -85,7 +85,6 @@ const UserQueue = ({ lat, long }: { lat: number, long: number }) => {
             });
         }
         const onMessageDeleted = (data: { barberId: string, userId: string, queueId: string }) => {
-            console.log(`Message deleted for queueId: ${data.queueId}, barberId: ${data.barberId}, userId: ${data.userId}`);
             setData((prevData) => {
                 return prevData.map((shop) => {
                     if (shop.id === data.barberId) {

@@ -7,7 +7,6 @@ export const getNearByShopsByApi = async (lat: number, long: number ) => {
             throw new Error('No data found');
         }
         const data = response.data;
-        console.log(data)
         return data;
     } catch (error) {
         
