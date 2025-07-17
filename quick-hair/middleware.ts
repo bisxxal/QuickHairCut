@@ -5,12 +5,15 @@ import type { NextRequest } from "next/server"
 export default withAuth(
   function middleware(req: NextRequest) {
     // Allow access for authenticated users
-     const pathname = req?.nextUrl?.pathname
+    const pathname = req?.nextUrl?.pathname
     const token = req?.nextauth?.token
-    const role = token?.role 
+    const role = token?.role
 
     // Protect /admin and /barber routes
     if (pathname.startsWith("/admin") && role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/", req.url))
+    }
+    if (pathname.startsWith("/user") && role !== "USER") {
       return NextResponse.redirect(new URL("/", req.url))
     }
 
@@ -30,7 +33,7 @@ export default withAuth(
       authorized: ({ token }) => !!token, // Only allow if user is logged in
     },
     pages: {
-      signIn: "/sign-in", 
+      signIn: "/sign-in",
     },
   }
 )
@@ -39,7 +42,7 @@ export const config = {
   matcher: [
     "/(user)/:path*",
     "/(barber)/:path*",
-    // "/(admin)/:path*",
+    "/(admin)/:path*",
     "/profile/editprofile"
   ],
 }

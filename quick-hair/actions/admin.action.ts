@@ -27,7 +27,6 @@ export const createBarber = async (data: FormData) => {
         }
         return { status: 200, message: "Barber created successfully", role };
     } catch (error) {
-        console.log("Error creating barber:", error);
         return { status: 500, message: "Internal Server Error" };
     }
 }

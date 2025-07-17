@@ -32,34 +32,34 @@ const UserMainPage = () => {
   const requestLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLat(position.coords.latitude);
-          setLong(position.coords.longitude);
-          localStorage.setItem('lat', position.coords.latitude.toString());
-          localStorage.setItem('long', position.coords.longitude.toString());
-          localStorage.setItem('userTime', new Date().toISOString());
-          toast.success("Location fetched successfully.");
-        },
-        (error) => {
-          switch (error.code) {
-            case 1:
-              toast.error("Location access denied by the user.");
-              setError("Location access denied by the user.");
-              break;
-            case 2:
-              toast.error("Location unavailable. Please check your device settings.");
-              setError("Location unavailable. Please check your device settings. Or come out of the building.");
-              break;
-            case 3:
-              toast.error("Location request timed out.");
-              setError("Location request timed out. Please try again.");
-              break;
-            default:
-              toast.error("An unknown error occurred while fetching location.");
-              setError("An unknown error occurred while fetching location.");
-              break;
-          }
-        },
+      (position) => {
+        setLat(position.coords.latitude);
+        setLong(position.coords.longitude);
+        localStorage.setItem('lat', position.coords.latitude.toString());
+        localStorage.setItem('long', position.coords.longitude.toString());
+        localStorage.setItem('userTime', new Date().toISOString());
+        toast.success("Location fetched successfully.");
+      },
+      (error) => {
+        switch (error.code) {
+          case 1:
+            toast.error("Location access denied by the user  please change settings .");
+            setError("Location access denied by the user please change settings .");
+            break;
+          case 2:
+            toast.error("Location unavailable. Please check your device settings.");
+            setError("Location unavailable. Please check your device settings. Or come out of the building.");
+            break;
+          case 3:
+            toast.error("Location request timed out.");
+            setError("Location request timed out. Please try again.");
+            break;
+          default:
+            toast.error("An unknown error occurred while fetching location.");
+            setError("An unknown error occurred while fetching location.");
+            break;
+        }
+      },
       );
     } else {
       toast.error("Geolocation is not supported by this browser.");
@@ -67,17 +67,13 @@ const UserMainPage = () => {
   };
   useEffect(() => {
     const fetchUserProfile = async () => {
-      console.log("Fetching user profile...")
-      // if (!phone) {
       const response = await getUser()
       if (response) {
         if(response.phoneNumber) {
           setPhone('true');
           localStorage.setItem('phone', 'true');
         }
-        // localStorage.setItem('phone', 'true');
       }
-      // }
     }
     if(!phone) {
     fetchUserProfile();
@@ -115,8 +111,8 @@ const UserMainPage = () => {
         </div>
         }
         { phone !== 'true' && <form action={handlePhoneChange} className=' flex my-3 flex-col gap-3 max-md:w-[90%] mx-auto'>
-          <input type="text" name='phone' placeholder='Enter your phone number' className=' textbase  w-full max-md:w-[70%] mx-auto' />
-          <button type='submit' className='buttonbg w-full max-md:w-[70%] mx-auto '>Save Phone Number</button>
+          <input type="text" name='phone' placeholder='Enter your phone number' className=' textbase max-md:w-[90%] w-[70%] mx-auto' />
+          <button type='submit' className='buttonbg max-md:w-[90%] w-[70%] mx-auto '>Save Phone Number</button>
         </form>}
       </div>
       {/* {lat && long && phone === 'true' && <UserQueue lat={lat} long={long} />} */}

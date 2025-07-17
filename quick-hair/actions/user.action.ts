@@ -15,7 +15,6 @@ export const userJoinQueue = async (barberId: string) => {
                 barberId,
                 userId: userId,
             },
-
         })
         if (!queue) {
             return { status: 404, message: "Failed to join queue" };
@@ -113,7 +112,6 @@ export const getUser = async () => {
                 name: true,
             },
         });
-        console.log(user)
         return user;
     } catch (error) {
         return null;
