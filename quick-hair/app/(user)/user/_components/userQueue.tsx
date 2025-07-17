@@ -136,8 +136,8 @@ const UserQueue = ({ lat, long }: { lat: number, long: number }) => {
                                         {userQueueIndex + 1 === 1 ? "Now Your Turn" : `You are in # ${userQueueIndex + 1}`}
                                     </p>
                                 ) : (
-                                    <button onClick={() => joinQueue(shop.id)} className='buttonbg center whitespace-normal max-md:w-full !px-2'>
-                                        {loadingBarberId ? <Loader className='animate-spin' /> :" Join Queue"}
+                                    <button onClick={() => joinQueue(shop.id)}disabled={loadingBarberId == shop.id} className='buttonbg disabled:opacity-50 center whitespace-normal max-md:w-full !px-2'>
+                                        {loadingBarberId == shop.id? <Loader className='animate-spin' /> :" Join Queue"}
                                     </button>
                                 )
                             }
