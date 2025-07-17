@@ -115,8 +115,10 @@ const UserMainPage = () => {
           <button type='submit' className='buttonbg max-md:w-[90%] w-[70%] mx-auto '>Save Phone Number</button>
         </form>}
       </div>
-      {/* {lat && long && phone === 'true' && <UserQueue lat={lat} long={long} />} */}
-      {<UserQueue lat={lat} long={long} />}
+      {lat ? long && phone === 'true' && <UserQueue lat={lat} long={long} />:
+      <p className=' center mt-20 text-center max-md:text-sm'>{` Get your ${!lat && "location"}  ${phone !== "true" ? " and phoneNumber" : ''} to see nearby Haircut`}</p>
+      }
+      {/* {<UserQueue lat={lat} long={long} />} */}
     </div>
   )
 }

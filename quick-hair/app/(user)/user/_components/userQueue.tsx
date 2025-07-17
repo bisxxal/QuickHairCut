@@ -132,7 +132,7 @@ const UserQueue = ({ lat, long }: { lat: number, long: number }) => {
 
                             {
                                 userQueueIndex !== -1 ? (
-                                    <p className='bg-green-400/40 whitespace-nowrap p-2 rounded-4xl center px-3 cursor-default border max-md:w-full  border-green-500 text-green-600'>
+                                    <p className='bg-green-400/40 whitespace-nowrap p-2 cursor-default rounded-4xl center px-3 cursor-default border max-md:w-full  border-green-500 text-green-600'>
                                         {userQueueIndex + 1 === 1 ? "Now Your Turn" : `You are in # ${userQueueIndex + 1}`}
                                     </p>
                                 ) : (
