@@ -19,7 +19,6 @@ export const viewQueue = async (req: Request, res: Response) => {
             },
             select: {
                 id: true,
-                name: true,
                 location: true,
                 gmapLink: true,
                 shopName: true,

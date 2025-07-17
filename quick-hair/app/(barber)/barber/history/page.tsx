@@ -1,11 +1,11 @@
 'use client'
 import { getBarberTrack } from '@/actions/barber.action'
+import { AnimateText } from '@/components/ui/AnimateText'
 import Back from '@/components/ui/back'
 import Loading from '@/components/ui/loading'
 import Pagination from '@/components/ui/pagination'
 import { formatDateForIndia } from '@/lib/util'
 import { useQuery } from '@tanstack/react-query'
-import moment from 'moment'
 import React, { useState } from 'react'
 
 const History = () => {
@@ -22,7 +22,7 @@ const History = () => {
   return (
     <div className=' w-full pb-10'>
       <Back className='' />
-      <h1 className=' text-center text-xl  font-semibold '>Service History</h1>
+      <h1 className=' text-center text-xl gap-1  center font-semibold '>Service History {data?.count && <AnimateText className='textbase font-bold'>{data?.count}</AnimateText>} </h1>
       {isLoading && <Loading boxes={8} child='w-[340px] h-[200px] max-md:w-full max-md:w-[200px] !rounded-2xl' parent=' !p-4 flex !flex-row !items-start !justify-start flex-wrap' />}
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4'>
         {data?.data.length !== 0 ? data?.data?.map((item: any) => (

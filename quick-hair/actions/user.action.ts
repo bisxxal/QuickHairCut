@@ -15,21 +15,20 @@ export const userJoinQueue = async (barberId: string) => {
                 barberId,
                 userId: userId,
             },
-            
+
         })
         if (!queue) {
             return { status: 404, message: "Failed to join queue" };
         }
         return { status: 200, message: "Joined queue successfully!" };
     } catch (error) {
-        // console.error("Error joining queue:", error);
         return { status: 500, message: "Failed to join queue" };
     }
 }
 
 const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
     const toRad = (value: number) => (value * Math.PI) / 180;
-    const R = 6371; 
+    const R = 6371;
     lat1 === null ? lat1 = 20.7746033 : lat1;
     lon1 === null ? lon1 = 86.4603367 : lon1;
     const dLat = toRad(lat2 - lat1);
@@ -59,7 +58,6 @@ export const getNearByShops = async (lat: number, long: number, km = 5) => {
             },
             select: {
                 id: true,
-                name: true,
                 location: true,
                 gmapLink: true,
                 shopName: true,
@@ -95,8 +93,50 @@ export const getNearByShops = async (lat: number, long: number, km = 5) => {
 
         return nearbyShops;
 
-    } catch (error) {   
+    } catch (error) {
 
         return [];
     }
 };
+export const getUser = async () => {
+    try {
+        const session = await getServerSession(authOptions);
+        const userId = session?.user?.id;
+        if (!userId) {
+            return null;
+        }
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                id: true,
+                phoneNumber: true,
+                name: true,
+            },
+        });
+        console.log(user)
+        return user;
+    } catch (error) {
+        return null;
+    }
+}
+export const updateUserProfile = async (  phoneNumber?: string ) => {
+    try {
+        const session = await getServerSession(authOptions);
+        const userId = session?.user?.id;
+        if (!userId) {
+            return { status: 401, message: "Unauthorized" };
+        }
+        const updatedUser = await prisma.user.update({
+            where: { id: userId },
+            data:{
+                phoneNumber: phoneNumber,
+            }
+        });
+        if(!updatedUser) {
+            return { status: 404, message: "Failed to update profile" };
+        }
+        return { status: 200, message: "Profile updated successfully", user: updatedUser };
+    } catch (error) {
+        return { status: 500, message: "Failed to update profile" };
+    }
+}

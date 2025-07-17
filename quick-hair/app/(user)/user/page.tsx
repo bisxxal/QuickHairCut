@@ -1,9 +1,10 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import UserQueue from './_components/userQueue'
 import { MapPinCheck } from 'lucide-react'
 import moment from 'moment'
+import { getUser, updateUserProfile } from '@/actions/user.action'
 
 const UserMainPage = () => {
   const [error, setError] = useState<string | null>(null)
@@ -14,7 +15,13 @@ const UserMainPage = () => {
     }
     return null;
   });
-
+  const [phone, setPhone] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      const val = localStorage.getItem('phone');
+      return val ? val : null;
+    }
+    return 'true';
+  });
   const [long, setLong] = useState<number | null>(() => {
     if (typeof window !== 'undefined') {
       const val = localStorage.getItem('long');
@@ -58,7 +65,41 @@ const UserMainPage = () => {
       toast.error("Geolocation is not supported by this browser.");
     }
   };
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      console.log("Fetching user profile...")
+      // if (!phone) {
+      const response = await getUser()
+      if (response) {
+        if(response.phoneNumber) {
+          setPhone('true');
+          localStorage.setItem('phone', 'true');
+        }
+        // localStorage.setItem('phone', 'true');
+      }
+      // }
+    }
+    if(!phone) {
+    fetchUserProfile();
+    }
+  }, [phone]);
+  const handlePhoneChange = async(formData: FormData) => {
+    const phoneNumber = formData.get('phone') as string;
 
+    if (!/^\d+$/.test(phoneNumber) || !/^[6-9]\d{9}$/.test(phoneNumber) || phoneNumber.length < 10) {
+      toast.error("Phone number must be a valid number with at least 10 digits.");
+      return;
+    }
+    const res = await updateUserProfile(phoneNumber);
+    if (res.status === 200) {
+      localStorage.setItem('phone', 'true');
+      setPhone('true');
+      toast.success("Phone number saved successfully.");
+    }
+    else {
+      toast.error(res.message || "Failed to save phone number.");
+    }
+  }
   return (
     <div className=' w-full min-h-full px-10 max-md:px-3'>
       {lat && <p>lat : {lat} , long : {long}</p>}
@@ -73,8 +114,12 @@ const UserMainPage = () => {
           <button className='buttonbg' onClick={() => requestLocation()}>Update Location</button>
         </div>
         }
+        { phone !== 'true' && <form action={handlePhoneChange} className=' flex my-3 flex-col gap-3 max-md:w-[90%] mx-auto'>
+          <input type="text" name='phone' placeholder='Enter your phone number' className=' textbase  w-full max-md:w-[70%] mx-auto' />
+          <button type='submit' className='buttonbg w-full max-md:w-[70%] mx-auto '>Save Phone Number</button>
+        </form>}
       </div>
-      {/* {lat && long && <UserQueue lat={lat} long={long} />} */}
+      {/* {lat && long && phone === 'true' && <UserQueue lat={lat} long={long} />} */}
       {<UserQueue lat={lat} long={long} />}
     </div>
   )

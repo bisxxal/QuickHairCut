@@ -1,17 +1,17 @@
 'use client'
 import { createBarber } from '@/actions/admin.action';
 import { useMutation } from '@tanstack/react-query';
-import React from 'react'
+import React, { useState } from 'react'
 import toast, { LoaderIcon } from 'react-hot-toast';
 
 const AdminPage = () => {
-    const handleSubmit = async(fromData: FormData) => {
+    const handleSubmit = async (fromData: FormData) => {
         const email = fromData.get('email') as string;
         const role = fromData.get('role') as string;
         if (!email) {
             toast.error("Email is required");
             return;
-        }  
+        }
         MadeBarber.mutate(fromData);
     }
     const MadeBarber = useMutation({
@@ -27,6 +27,7 @@ const AdminPage = () => {
         }
 
     })
+
     return (
         <div className=' w-full h-screen flex items-center justify-center'>
             <form className='w-1/2 max-md:w-[90%] card h-1/2 rounded-4xl flex flex-col gap-3 items-center justify-center ' action={handleSubmit}>
@@ -40,6 +41,7 @@ const AdminPage = () => {
                     {MadeBarber.isPending ? <LoaderIcon /> : "Apply changes"}
                 </button>
             </form>
+            
         </div>
     )
 }

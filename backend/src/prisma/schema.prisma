@@ -28,7 +28,6 @@ model User {
 
 model Barber {
   id          String  @id @default(cuid())
-  name        String?
   shopName    String?
   lat         Float?
   long        Float?

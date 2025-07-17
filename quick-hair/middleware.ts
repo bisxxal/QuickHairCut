@@ -10,18 +10,18 @@ export default withAuth(
     const role = token?.role 
 
     // Protect /admin and /barber routes
-    // if (pathname.startsWith("/admin") && role !== "ADMIN") {
-    //   return NextResponse.redirect(new URL("/", req.url))
-    // }
+    if (pathname.startsWith("/admin") && role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/", req.url))
+    }
 
-    // if (pathname.startsWith("/barber") && role !== "BARBER") {
-    //   return NextResponse.redirect(new URL("/", req.url))
-    // }
+    if (pathname.startsWith("/barber") && role !== "BARBER") {
+      return NextResponse.redirect(new URL("/", req.url))
+    }
 
-    // // Prevent USER from accessing barber/admin routes
-    // if ((pathname.startsWith("/admin") || pathname.startsWith("/barber")) && role === "USER") {
-    //   return NextResponse.redirect(new URL("/", req.url))
-    // }
+    // Prevent USER from accessing barber/admin routes
+    if ((pathname.startsWith("/admin") || pathname.startsWith("/barber")) && role === "USER") {
+      return NextResponse.redirect(new URL("/", req.url))
+    }
 
     return NextResponse.next()
   },
@@ -30,16 +30,16 @@ export default withAuth(
       authorized: ({ token }) => !!token, // Only allow if user is logged in
     },
     pages: {
-      signIn: "/sign-in", // redirect here if not authenticated
+      signIn: "/sign-in", 
     },
   }
 )
 
 export const config = {
   matcher: [
-    // "/(user)/:path*",
-    // "/(barber)/:path*",
-    "/(admin)/:path*",
+    "/(user)/:path*",
+    "/(barber)/:path*",
+    // "/(admin)/:path*",
     "/profile/editprofile"
   ],
 }

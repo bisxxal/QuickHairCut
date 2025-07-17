@@ -12,20 +12,19 @@ export const updateBarber = async (data: FormData, lat: number, long: number) =>
             return { status: 401, message: "Unauthorized" };
         }
         const userId = session?.user?.id;
-        const name = data.get('name') as string;
         const shopName = data.get('shopName') as string;
         const location = data.get('location') as string;
         const gmapLink = data.get('link') as string;
         const phoneNumber = data.get('phoneNumber') as string;
 
-        if (!name || !shopName || isNaN(lat) || isNaN(long)) {
+        if ( !shopName || isNaN(lat) || isNaN(long)) {
             return { status: 204, message: "Failed to update Profile. All fields are required." };
         }
 
         const barber = await prisma.barber.update({
             where: { userId: userId },
             data: {
-                name, shopName, lat, long, location, gmapLink, phoneNumber
+                 shopName, lat, long, location, gmapLink, phoneNumber
             },
             // update:{
             //     name, shopName, lat, long, location, gmapLink, phoneNumber
@@ -82,7 +81,7 @@ export const getBarberQueue = async (p: number) => {
             return { status: 401, message: "Unauthorized", data: [] };
         }
         const userId = session.user.id;
-         const barberId = await prisma.barber.findUnique({
+        const barberId = await prisma.barber.findUnique({
             where: { userId },
             select: { id: true },
         });
@@ -93,7 +92,7 @@ export const getBarberQueue = async (p: number) => {
 
         const [barber, count] = await prisma.$transaction([
             prisma.queue.findMany({
-            where: { barberId: barberId?.id },
+                where: { barberId: barberId?.id },
                 take: limit,
                 skip: limit * (p - 1),
                 select: {
@@ -112,12 +111,12 @@ export const getBarberQueue = async (p: number) => {
             prisma.queue.count({
                 where: { barberId: barberId?.id },
             })
-        ]) 
+        ])
         if (!barber) {
             return { status: 404, message: "Barber not found", data: [] };
         }
 
-        return JSON.parse(JSON.stringify({ data: barber ,count }));
+        return JSON.parse(JSON.stringify({ data: barber, count }));
     } catch (error) {
         // console.log("Error in getBarberQueue:", error);
         return { status: 500, message: "Internal Server Error", data: [] };
@@ -134,7 +133,7 @@ export const deleteQueueItem = async (id: string) => {
             where: {
                 id: id
             },
-            select:{
+            select: {
                 id: true,
                 barberId: true,
                 userId: true,
@@ -143,7 +142,7 @@ export const deleteQueueItem = async (id: string) => {
         if (!queueItem) {
             return { status: 404, message: "Queue item not found" };
         }
-        return { status: 200, message: "Queue item deleted successfully" , queueItem };
+        return { status: 200, message: "Queue item deleted successfully", queueItem };
     } catch (error) {
         // console.log("Error in deleteQueueItem:", error);
         return { status: 500, message: "Internal Server Error" };
@@ -175,9 +174,9 @@ export const completeQueueItem = async (queueId: string, userId: string, barberI
 
         const q = await deleteQueueItem(queueId)
         if (!queueItem) {
-            return { status: 404, message: "Queue item not found"  };
+            return { status: 404, message: "Queue item not found" };
         }
-        return { status: 200, message: "Queue item updated successfully",queueItem:q.queueItem  };
+        return { status: 200, message: "Queue item updated successfully", queueItem: q.queueItem };
     } catch (error) {
         // console.log("Error in updateQueueItem:", error);
         return { status: 500, message: "Internal Server Error" };
@@ -233,46 +232,39 @@ export const getBarberTrack = async (p: number) => {
         return { status: 500, message: "Internal Server Error", data: [] };
     }
 }
-export const getBarberTransactions = async (startDate:Date, endDate:Date) => {
+export const getBarberTransactions = async (startDate: Date, endDate: Date) => {
     try {
         const session = await getServerSession(authOptions);
         if (!session || !session.user) {
             return { status: 401, message: "Unauthorized", data: [] };
         }
         const userId = session.user.id;
-        const barber = await prisma.barber.findMany({
-                where: { userId ,
-                    trackService: {
-                        some: {
-                            completedAt: {
-                                gte: startDate,
-                                lte: endDate
-                            }
-                        }
-                    }
-                 },
-                select: {
-                    trackService: { 
-                        select: {
-                            completedAt:true,
-                            amount: true,
-                            user:{
-                                select: {
-                                    name: true,
-                                }
-                            }
-                        },
-                        
-                    }
+        const barber = await prisma.trackService.findMany({
+            where: {
+                barber: {
+                    userId: userId,
                 },
-            }) 
+                completedAt: {
+                    gte: startDate,
+                    lte: endDate,
+                },
+            },
+            select: {
+                completedAt: true,
+                amount: true,
+                user: {
+                    select: {
+                        name: true,
+                    },
+                },
+            },
+        });
         if (!barber) {
             return { status: 404, message: "Barber not found", data: [] };
         }
 
-        return JSON.parse(JSON.stringify({ data: barber[0].trackService }));
+        return JSON.parse(JSON.stringify({ data: barber }));
     } catch (error) {
-        // console.log("Error in getBarberTrack:", error);
         return { status: 500, message: "Internal Server Error", data: [] };
     }
 }

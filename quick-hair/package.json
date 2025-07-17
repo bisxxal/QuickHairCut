@@ -3,11 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "postinstall": "prisma generate",
+     "dev": "next dev",
+    "build": "next build", 
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
+    "studio": "prisma studio",
+    "prisma:docker": "npm run prisma:migrate && npm run studio",
+    "dev:docker": "npm run prisma:docker & next dev"
   },
   "dependencies": {
     "@faker-js/faker": "^9.9.0",

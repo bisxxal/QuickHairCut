@@ -49,15 +49,15 @@ const BarberProfileEditPage = ({ data }: { data: BarberProfileProps }) => {
     };
 
     const handleSubmit = async (formdata: FormData) => {
-        const name = formdata.get('name') as string;
         const shopName = formdata.get('shopName') as string;
         const phoneNumber = formdata.get('phoneNumber') as string;
+        const link  = formdata.get('link') as string;
 
         if (!lat && !long) {
             toast.error("Please fetch your current location first.");
             return;
         }
-        if (!name || !shopName) {
+        if ( !shopName) {
             toast.error("All fields are required and must be valid.");
             return;
         }
@@ -66,6 +66,14 @@ const BarberProfileEditPage = ({ data }: { data: BarberProfileProps }) => {
             toast.error("Phone number must be a valid number with at least 10 digits.");
             return;
         }
+        if(link){
+             const urlRegex = /^(https?:\/\/)?([\w\d-]+\.){1,}[a-zA-Z]{2,}(:\d+)?(\/.*)?$/;
+            if (!urlRegex.test(link)) {
+                toast.error("Please enter a valid Google Map URL.");
+                return;
+            }
+        }
+
         updateProfile.mutate(formdata);
     }
 
@@ -89,10 +97,6 @@ const BarberProfileEditPage = ({ data }: { data: BarberProfileProps }) => {
         <div className=' w-full pb-10'>
             <form className=' w-[70%] mt-10 max-md:text-[14px] text-base max-md:w-[90%] mx-auto flex flex-col ' action={handleSubmit}>
                 <div className=' flex flex-col gap-2'>
-                    <label htmlFor="name">Name</label>
-                    <input defaultValue={data?.name} type="text" name="name" id="name" required />
-                </div>
-                <div className=' flex flex-col gap-2'>
                     <label htmlFor="shopName">Shop Name</label>
                     <input defaultValue={data?.shopName} type="text" name="shopName" id="shopName" required />
                 </div>
@@ -113,7 +117,7 @@ const BarberProfileEditPage = ({ data }: { data: BarberProfileProps }) => {
                     }
                 </div>
                 <div className='flex flex-col gap-2'>
-                    <label htmlFor="location">Landmark / Location</label>
+                    <label htmlFor="location">Location / Landmark</label>
                     <input defaultValue={data?.location} type="text" name="location" id="location" required />
                 </div>
                 <div className='flex flex-col gap-2'>

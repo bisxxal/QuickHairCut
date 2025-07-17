@@ -1,5 +1,5 @@
 'use client'
-import { CircleEllipsis, Scissors } from 'lucide-react'
+import { AlignRight, Scissors } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import React from 'react'
@@ -21,7 +21,7 @@ const Navbar = ({panel}:{panel:'user'|'barber'}) => {
           {panel === 'user' &&   <button onClick={() => signOut()} className=" bg-gradient-to-br from-red-200/50 to-red-500/80 text-red-600 rounded-full border border-red-500  px-5 py-2 max-md:px-3 max-md:text-sm max-md:py-1.5">Logout</button>}
           {panel === 'barber' && <div className='relative group '>
             <label className=' cursor-pointer' htmlFor='is'>
-              <CircleEllipsis className='' size={22} />
+              <AlignRight className='' size={22} />
             </label>
             <input type="checkbox" hidden id="is" />
             <div className='group-has-checked:flex hidden appear absolute  py-3.5 w- z-30 flex-col gap-2  text-white p-2  rounded-3xl bg-[#00056237] !backdrop-blur-[25px] -left-[155px] '>

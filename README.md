@@ -1,4 +1,5 @@
 #  An opensource real life solving software
+<img width="1470" height="908" alt="Screenshot 2025-07-15 at 20 32 57" src="https://github.com/user-attachments/assets/a0cd4475-7a6f-452d-afbd-5e7c20fd2096" />
 
 #  Quick Hair
 Quick Hair is an open-source project designed to streamline the process of booking and managing hair salon appointments. It provides a user-friendly interface for both customers and salon owners, allowing for efficient appointment scheduling, queue management, and analytics tracking. The project aims to enhance the customer experience while providing valuable insights for salon owners to optimize their services.
@@ -94,8 +95,10 @@ If you encounter any issues or have questions:
 - [ ] Wearable device integration
 
 ## 📱 Screenshots
-
-*Add screenshots of your application here*
+<img width="1465" height="916" alt="Screenshot 2025-07-15 at 20 37 29" src="https://github.com/user-attachments/assets/ea891d79-b043-4e60-a589-963516950974" />
+<img width="1439" height="507" alt="Screenshot 2025-07-16 at 20 25 21" src="https://github.com/user-attachments/assets/56b7b008-de26-49ba-acbe-432db3728717" /> 
+<img width="1423" height="690" alt="Screenshot 2025-07-16 at 20 31 40" src="https://github.com/user-attachments/assets/62370f99-813a-4115-bf8d-ecd45216e81c" />
+<img width="1439" height="684" alt="Screenshot 2025-07-16 at 20 32 12" src="https://github.com/user-attachments/assets/ef96f16c-2183-4c96-a8cc-338ac062ec4a" />
 
 ## 🔗 Links
 

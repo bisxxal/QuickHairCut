@@ -1,7 +1,6 @@
 'use client'
 import { completeQueueItem, deleteQueueItem, getBarber, getBarberQueue } from '@/actions/barber.action'
-import AnimatedDigit from '@/components/ui/animatedDigit'
-import CountUp from '@/components/ui/countup'
+import { AnimateText } from '@/components/ui/AnimateText'
 import Loading from '@/components/ui/loading'
 import Pagination from '@/components/ui/pagination'
 import SwipeRevealActions from '@/components/ui/swipeToDelete'
@@ -9,7 +8,6 @@ import { useSocket } from '@/hook/useSocket'
 import { formatDateForIndia, serviceOptions } from '@/lib/util'
 import { useMutation } from '@tanstack/react-query'
 import { Loader, X } from 'lucide-react'
-import moment from 'moment'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -188,25 +186,16 @@ const BarberQueuePage = () => {
   }
   const totalPages = Math.ceil(data?.count / limit);
 
-  const [prevCount, setPrevCount] = useState(onlineUser.length);
-
-  useEffect(() => {
-    setPrevCount(onlineUser.length);
-  }, [onlineUser.length]);
-
-  const currDigits = String(onlineUser.length).split('');
-  const prevDigits = String(prevCount).padStart(currDigits.length, '0').split('');
-
   return (
     <div className='relative w-full px-4 pb-10'>
 
       <div className=' flex items-center justify-end w-1/2 ml-auto max-md:w-full  max-md:items-start max-md:gap-2'>
-        <h1 className=' text-center text-xl font-semibold my-5'>Mange Queue <span className=' textbase'>
-          {data?.count && <CountUp from={0} to={data?.count} separator="," direction="up" duration={1} className="count-up-text text-xl " />}</span></h1>
+        <h1 className=' text-center text-xl font-semibold flex items-center gap-1 my-5'>Mange Queue <span className='flex textbase'>
+          {data?.count && <AnimateText className=' tex-2xl'>{data?.count}</AnimateText>}
+          </span></h1>
         <h2 className=" bg-gradient-to-b from-green-300/20 to-green-300 p-2 ml-auto my-4 font-medium rounded-4xl px-3 cursor-default border w-fit border-green-500 text-green-600 flex gap-1">
           <span className='delay-300 animate-ping mr-1'>🟢</span> Online
-          {currDigits.map((digit, idx) => (
-            <AnimatedDigit key={idx + '-' + digit} digit={digit} prevDigit={prevDigits[idx] || digit} />))}
+          <AnimateText className=' tex-2xl'>{onlineUser.length}</AnimateText>
         </h2>
       </div>
       {showEdit.userId && <div className='popupOpen fixed h-full w-full top-0 left-0 backdrop-blur-[20px]  bg-[#00000046] p-4 z-100'>

@@ -50,7 +50,7 @@ const TrackPage = () => {
       .sort((a, b) => a.timestamp - b.timestamp);
 
     setTypeData(sorted);
-  }, [data]);
+  }, [data, startDate, endDate]);
  
   return (
     <div className=' w-full min-h-screen pb-20'>

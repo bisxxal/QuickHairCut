@@ -85,7 +85,7 @@ const CustomerAnalyticsPage = () => {
                 typedata.map((item:{name:string ,amount:number,count:number}, index) => (
                   <div key={index} className='flex items-center gap-2'>
                     <div className='w-3 h-3 rounded-full' style={{ backgroundColor: COLORS2[index % COLORS2.length] }}></div>
-                    <span className='text-sm'>{item.name} ₹{item.amount} Total visit:{item.count}</span>
+                    <span className='text-sm'>{item.name} <span className=' text-lg font-semibold'>₹{item.amount}</span>  Total visit:{item.count}</span>
                   </div>
                 ))
               }
